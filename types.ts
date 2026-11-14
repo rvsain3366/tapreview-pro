@@ -1,0 +1,4 @@
+export type ShopLink = { id?: string; shop_id?: string; title: string; url: string; icon?: string; sort_order?: number };
+export type Shop = { id: string; name: string; slug: string; owner_name: string; mobile: string; logo_url: string; address: string; google_review_url: string; whatsapp_url: string; instagram_url: string; facebook_url: string; youtube_url: string; website_url: string; created_at?: string; links?: ShopLink[] };
+export const emptyShop = (): Omit<Shop,'id'> => ({name:'',slug:'',owner_name:'',mobile:'',logo_url:'',address:'',google_review_url:'',whatsapp_url:'',instagram_url:'',facebook_url:'',youtube_url:'',website_url:'',links:[]});
+export const slugify = (s:string) => s.toLowerCase().trim().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
