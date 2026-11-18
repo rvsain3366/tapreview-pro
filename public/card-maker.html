@@ -4,13 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TapReview Pro - 4x6 Print Card</title>
-  <script src="https://cloudflare.com"></script>
-  <script src="https://cloudflare.com"></script>
-  <link href="https://googleapis.com" rel="stylesheet">
+  <script src="https://jsdelivr.net"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       background: #0f172a;
       color: #ffffff;
       min-height: 100vh;
@@ -19,7 +17,7 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      gap: 30px;
+      gap: 28px;
     }
     .panel {
       width: 100%;
@@ -58,95 +56,29 @@
     input:focus { border-color: #fbbf24; }
     .btn-download {
       width: 100%;
-      padding: 14px;
+      padding: 15px;
       border: none;
       border-radius: 14px;
       background: linear-gradient(90deg, #fbbf24, #eab308);
       color: #09132c;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 10px 20px rgba(234, 179, 8, 0.25);
+      box-shadow: 0 10px 20px rgba(234, 179, 8, 0.3);
     }
+    .btn-download:active { transform: scale(0.98); }
     .note { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 10px; }
-
-    /* 4x6 प्रिंट कार्ड स्टाइल (400px x 600px) */
-    #printCard4x6 {
-      width: 400px;
-      height: 600px;
-      border-radius: 28px;
-      background: radial-gradient(circle at 50% 25%, #162b5b 0%, #09132c 75%, #050b1a 100%);
-      border: 2px solid rgba(234, 179, 8, 0.45);
-      padding: 24px 20px;
+    .preview-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+    }
+    canvas {
+      width: 340px;
+      height: 510px;
+      border-radius: 24px;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75);
     }
-    .top-tap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .tap-title {
-      font-size: 32px;
-      font-weight: 800;
-      background: linear-gradient(to bottom, #fde047, #eab308, #ca8a04);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .shop-pill {
-      background: rgba(251, 191, 36, 0.15);
-      border: 1px solid rgba(251, 191, 36, 0.45);
-      padding: 6px 18px;
-      border-radius: 99px;
-      max-width: 92%;
-    }
-    .shop-pill h1 {
-      font-size: 19px;
-      font-weight: 800;
-      color: #ffffff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .stars { color: #fbbf24; font-size: 26px; letter-spacing: 3px; }
-    .hindi-msg { font-size: 15px; font-weight: 700; color: #fef3c7; line-height: 1.4; margin-top: 4px; }
-    .qr-box {
-      background: #ffffff;
-      padding: 14px;
-      border-radius: 20px;
-      border: 2px solid #fde047;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.5);
-    }
-    #qrcodeBox { width: 170px; height: 170px; display: flex; align-items: center; justify-content: center; }
-    .scan-txt { display: block; font-size: 11px; font-weight: 800; color: #0f172a; margin-top: 8px; }
-    .socials {
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      padding: 0 10px;
-    }
-    .soc-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .soc-icon {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .soc-lbl { font-size: 10px; font-weight: 700; color: #e2e8f0; }
-    .footer {
-      width: 100%;
-      padding-top: 10px;
-      border-top: 1px solid rgba(251, 191, 36, 0.25);
-      font-size: 11px;
-      font-weight: 700;
-      color: #cbd5e1;
-    }
-    .footer span { color: #fbbf24; }
   </style>
 </head>
 <body>
@@ -154,111 +86,195 @@
   <div class="panel">
     <span class="badge">Admin Card Studio • 4x6 Inch</span>
     <h2>प्रिंट कार्ड डिजाइन तैयार करें</h2>
-    <p class="sub">दुकान या व्यक्ति का नाम और लिंक डालें, कार्ड तुरंत अपडेट होगा।</p>
+    <p class="sub">नाम और लिंक लिखें, नीचे कार्ड और QR कोड तुरंत बन जाएगा।</p>
 
     <label>दुकान या व्यक्ति का नाम (Shop / Personal Name)</label>
-    <input type="text" id="inputName" value="शर्मा इलेक्ट्रॉनिक्स" oninput="updateCard()" placeholder="नाम लिखें..." />
+    <input type="text" id="inputName" value="Keshav Atal Sewa Kendra" oninput="drawCard()" placeholder="नाम लिखें..." />
 
     <label>जनरेट किया गया NFC / Review लिंक (QR के लिए)</label>
-    <input type="text" id="inputLink" value="https://tapreview.pro" oninput="updateCard()" placeholder="https://..." />
+    <input type="text" id="inputLink" value="https://vercel.app" oninput="drawCard()" placeholder="https://..." />
 
-    <button class="btn-download" onclick="downloadCard()">⬇️ Download 4x6 Print Design (PNG)</button>
-    <p class="note">हाई-क्वालिटी (1200x1800 px) फाइल डाउनलोड होगी, जो सीधे 4x6 Acrylic शीट पर प्रिंट के लिए तैयार है।</p>
+    <button class="btn-download" onclick="downloadPNG()">⬇️ Download 4x6 Print Design (PNG)</button>
+    <p class="note" id="statusMsg">हाई-क्वालिटी (1200x1800 px) फाइल सीधे फोन में डाउनलोड होगी।</p>
   </div>
 
-  <div id="printCard4x6">
-    <div class="top-tap">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round">
-        <path d="M6 8.32a7.43 7.43 0 0 1 0 7.36" />
-        <path d="M9.46 6.21a11.76 11.76 0 0 1 0 11.58" />
-        <path d="M12.91 4.1a15.91 15.91 0 0 1 .01 15.8" />
-        <path d="M16.37 2a20.16 20.16 0 0 1 0 20" />
-      </svg>
-      <span class="tap-title">Tap Here</span>
-    </div>
-
-    <div class="shop-pill">
-      <h1 id="displayShopName">शर्मा इलेक्ट्रॉनिक्स</h1>
-    </div>
-
-    <div>
-      <div class="stars">★★★★★</div>
-      <p class="hindi-msg">आपका एक लाईक और कमेंट<br>हमे और बेहतर बनाता है</p>
-    </div>
-
-    <div class="qr-box">
-      <div id="qrcodeBox"></div>
-      <span class="scan-txt">Scan or Tap to Connect</span>
-    </div>
-
-    <div class="socials">
-      <div class="soc-item">
-        <div class="soc-icon" style="background:#fff;">
-          <svg width="20" height="20" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/>
-            <path fill="#34A853" d="M12 24c3.3 0 6.08-1.09 8.1-2.96l-3.88-3.05c-1.1.74-2.51 1.18-4.22 1.18-3.26 0-6.02-2.2-7-5.16H1.01v3.14C3.05 21.2 7.24 24 12 24Z"/>
-            <path fill="#FBBC05" d="M5 14.01c-.25-.74-.39-1.54-.39-2.36 0-.82.14-1.62.39-2.36V6.15H1.01C.37 7.43 0 8.87 0 10.39s.37 2.96 1.01 4.24l3.99-3.14Z"/>
-            <path fill="#EA4335" d="M12 4.75c1.79 0 3.41.62 4.68 1.82l3.51-3.51C18.07 1.19 15.3 0 12 0 7.24 0 3.05 2.8 1.01 6.85l3.99 3.14c.98-2.96 3.74-5.24 7-5.24Z"/>
-          </svg>
-        </div>
-        <span class="soc-lbl">Google Review</span>
-      </div>
-
-      <div class="soc-item">
-        <div class="soc-icon" style="background:linear-gradient(45deg,#f59e0b,#db2777,#7c3aed);border-radius:10px;">
-          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
-          </svg>
-        </div>
-        <span class="soc-lbl">Instagram</span>
-      </div>
-
-      <div class="soc-item">
-        <div class="soc-icon" style="background:#25D366;">
-          <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24">
-            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
-          </svg>
-        </div>
-        <span class="soc-lbl">WhatsApp</span>
-      </div>
-    </div>
-
-    <div class="footer">
-      Powered by <span>Ravkirkesh</span> • TapReview Pro
-    </div>
+  <div class="preview-wrap">
+    <canvas id="cardCanvas" width="1200" height="1800"></canvas>
   </div>
 
   <script>
-    function updateCard() {
-      const nameVal = document.getElementById("inputName").value.trim();
-      const linkVal = document.getElementById("inputLink").value.trim();
-      document.getElementById("displayShopName").innerText = nameVal || "Your Shop Name";
-      const container = document.getElementById("qrcodeBox");
-      container.innerHTML = "";
-      new QRCode(container, {
-        text: linkVal || "https://tapreview.pro",
-        width: 165,
-        height: 165,
-        colorDark: "#09132c",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-      });
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
     }
 
-    function downloadCard() {
-      const card = document.getElementById("printCard4x6");
+    function drawCard() {
+      const canvas = document.getElementById("cardCanvas");
+      const ctx = canvas.getContext("2d");
+      const W = 1200, H = 1800;
+
+      const shopName = document.getElementById("inputName").value.trim() || "Your Shop Name";
+      const linkUrl = document.getElementById("inputLink").value.trim() || "https://vercel.app";
+
+      ctx.clearRect(0, 0, W, H);
+
+      ctx.save();
+      roundRect(ctx, 10, 10, W - 20, H - 20, 84);
+      ctx.clip();
+
+      const bgGrad = ctx.createRadialGradient(W/2, H*0.25, 80, W/2, H*0.5, 1100);
+      bgGrad.addColorStop(0, "#19326b");
+      bgGrad.addColorStop(0.7, "#09132c");
+      bgGrad.addColorStop(1, "#040917");
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = "rgba(234, 179, 8, 0.10)";
+      ctx.lineWidth = 3;
+      for (let i = -H; i < W + H; i += 140) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + H, H); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(i, H); ctx.lineTo(i + H, 0); ctx.stroke();
+      }
+      ctx.restore();
+
+      roundRect(ctx, 14, 14, W - 28, H - 28, 80);
+      ctx.strokeStyle = "rgba(250, 204, 21, 0.55)";
+      ctx.lineWidth = 8;
+      ctx.stroke();
+
+      ctx.save();
+      ctx.strokeStyle = "#fbbf24";
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+      const wx = 355, wy = 165;
+      const waves = new Array(35, 55, 75, 95);
+      for (let i = 0; i < waves.length; i++) {
+        ctx.beginPath();
+        ctx.arc(wx, wy, waves[i], -0.65, 0.65);
+        ctx.stroke();
+      }
+
+      const goldGrad = ctx.createLinearGradient(0, 110, 0, 210);
+      goldGrad.addColorStop(0, "#fef08a");
+      goldGrad.addColorStop(0.5, "#eab308");
+      goldGrad.addColorStop(1, "#ca8a04");
+      ctx.fillStyle = goldGrad;
+      ctx.font = "800 92px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Tap Here", 470, 195);
+      ctx.restore();
+
+      ctx.font = "800 54px sans-serif";
+      if (ctx.measureText(shopName).width > 960) {
+        ctx.font = "800 42px sans-serif";
+      }
+      const textW = Math.min(ctx.measureText(shopName).width + 110, 1060);
+      roundRect(ctx, (W - textW)/2, 255, textW, 105, 52);
+      ctx.fillStyle = "rgba(251, 191, 36, 0.16)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(251, 191, 36, 0.55)";
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.fillText(shopName, W/2, 326, 1000);
+
+      ctx.fillStyle = "#fbbf24";
+      ctx.font = "76px sans-serif";
+      ctx.fillText("★  ★  ★  ★  ★", W/2, 465);
+
+      ctx.fillStyle = "#fef3c7";
+      ctx.font = "700 44px sans-serif";
+      ctx.fillText("आपका एक लाईक और कमेंट", W/2, 545);
+      ctx.fillText("हमे और बेहतर बनाता है", W/2, 605);
+
+      const boxSize = 620;
+      const boxX = (W - boxSize)/2;
+      const boxY = 670;
+      roundRect(ctx, boxX, boxY, boxSize, boxSize + 75, 48);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.strokeStyle = "#fde047";
+      ctx.lineWidth = 8;
+      ctx.stroke();
+
+      if (typeof qrcode !== "undefined") {
+        const qr = qrcode(0, "H");
+        qr.addData(linkUrl);
+        qr.make();
+        const count = qr.getModuleCount();
+        const qrDrawSize = 520;
+        const cell = qrDrawSize / count;
+        const startX = boxX + (boxSize - qrDrawSize)/2;
+        const startY = boxY + 45;
+
+        ctx.fillStyle = "#09132c";
+        for (let r = 0; r < count; r++) {
+          for (let c = 0; c < count; c++) {
+            if (qr.isDark(r, c)) {
+              ctx.fillRect(startX + c * cell, startY + r * cell, Math.ceil(cell), Math.ceil(cell));
+            }
+          }
+        }
+      }
+
+      ctx.fillStyle = "#0f172a";
+      ctx.font = "800 32px sans-serif";
+      ctx.fillText("Scan or Tap to Connect", W/2, boxY + boxSize + 36);
+
+      const iconY = 1485;
+      ctx.beginPath(); ctx.arc(280, iconY, 54, 0, Math.PI*2); ctx.fillStyle = "#ffffff"; ctx.fill();
+      ctx.fillStyle = "#4285F4"; ctx.font = "900 58px sans-serif"; ctx.fillText("G", 280, iconY + 20);
+      ctx.fillStyle = "#e2e8f0"; ctx.font = "700 28px sans-serif"; ctx.fillText("Google Review", 280, iconY + 95);
+
+      const igGrad = ctx.createLinearGradient(546, iconY - 54, 654, iconY + 54);
+      igGrad.addColorStop(0, "#f59e0b"); igGrad.addColorStop(0.5, "#db2777"); igGrad.addColorStop(1, "#7c3aed");
+      roundRect(ctx, 546, iconY - 54, 108, 108, 28); ctx.fillStyle = igGrad; ctx.fill();
+      ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 7;
+      roundRect(ctx, 570, iconY - 30, 60, 60, 16); ctx.stroke();
+      ctx.beginPath(); ctx.arc(600, iconY, 14, 0, Math.PI*2); ctx.stroke();
+      ctx.fillStyle = "#e2e8f0"; ctx.font = "700 28px sans-serif"; ctx.fillText("Instagram", 600, iconY + 95);
+
+      ctx.beginPath(); ctx.arc(920, iconY, 54, 0, Math.PI*2); ctx.fillStyle = "#25D366"; ctx.fill();
+      ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 7;
+      ctx.beginPath(); ctx.arc(920, iconY - 2, 26, 0, Math.PI*2); ctx.stroke();
+      ctx.fillStyle = "#e2e8f0"; ctx.font = "700 28px sans-serif"; ctx.fillText("WhatsApp", 920, iconY + 95);
+
+      ctx.strokeStyle = "rgba(251, 191, 36, 0.3)";
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(100, 1665); ctx.lineTo(W - 100, 1665); ctx.stroke();
+
+      ctx.fillStyle = "#cbd5e1";
+      ctx.font = "700 32px sans-serif";
+      ctx.fillText("Powered by Ravkirkesh • TapReview Pro", W/2, 1725);
+    }
+
+    function downloadPNG() {
+      const canvas = document.getElementById("cardCanvas");
       const shopName = document.getElementById("inputName").value.trim() || "TapReview-Card";
-      html2canvas(card, { scale: 3, backgroundColor: null }).then(canvas => {
-        const link = document.createElement("a");
-        link.download = `${shopName.replace(/\s+/g, "_")}_4x6_Print.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-      });
+      const status = document.getElementById("statusMsg");
+      status.innerText = "डाउनलोड तैयार हो रहा है...";
+
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${shopName.replace(/\s+/g, "_")}_4x6_Print.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+        status.innerText = "✅ डाउनलोड शुरू हो गया है! अपनी फोन गैलरी या Downloads में देखें।";
+      }, "image/png");
     }
 
-    window.onload = () => updateCard();
+    window.onload = () => drawCard();
   </script>
 </body>
 </html>
